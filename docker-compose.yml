@@ -1,0 +1,32 @@
+version: '3.0'
+services:
+  nginx:
+    image: nginx:1.15-alpine
+    restart: unless-stopped
+    network_mode: host
+    # restart nginx every 6 hours, incase the certificates have renewed
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    # check for certificate renewal every 12 hours
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+
+  oauth2-proxy:
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.4.0
+    restart: unless-stopped
+    network_mode: host
+    command: --config /oauth2-proxy.cfg
+    hostname: oauth2-proxy
+    volumes:
+      - "./data/oauth2-proxy/oauth2-proxy.cfg:/oauth2-proxy.cfg"
+
+
