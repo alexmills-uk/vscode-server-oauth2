@@ -1,0 +1,19 @@
+http_address="127.0.0.1:4180"
+
+cookie_secret=""
+
+client_secret=""
+client_id=""
+provider="github"
+scope="user:email"
+email_domains="foo"
+
+
+redirect_url="https://example.org/oauth2/callback"
+cookie_domains="example.org" # Required so cookie can be read on all subdomains.
+whitelist_domains="example.org" # Required to allow redirection back to original requested target.
+
+cookie_secure="true"
+upstreams="https://127.0.0.1:8080"
+ssl_upstream_insecure_skip_verify="true"
+reverse_proxy="true"
