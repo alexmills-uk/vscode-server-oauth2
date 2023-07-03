@@ -1,4 +1,5 @@
 *.pem
 data/certbot/conf/renewal
+data/certbot/conf/live
 data/oauth2-proxy/oauth2-proxy.cfg
 data/nginx/app.conf
